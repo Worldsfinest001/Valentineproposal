@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Be My Valentine 💝</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #1a0f1f;
+            min-height: 100vh;
+            overflow: hidden;
+            color: white;
+        }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 2;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .valentine-card {
+            background: rgba(255, 192, 203, 0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 600px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 105, 180, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            color: #ff69b4;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .message {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-yes {
+            background: #ff69b4;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .btn-no {
+            background: #ff9999;
+            color: white;
+            position: absolute;
+        }
+
+        .pidgin-message {
+            font-size: 1.3rem;
+            margin-top: 1rem;
+            color: #ff69b4;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,105,180,0.5); }
+            100% { transform: scale(1); }
+        }
+
+        .celebration {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        #audioControl {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255,105,180,0.2);
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            color: white;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="particles-js"></div>
+    <audio id="bgMusic" loop>
+        <source src="https://cdnjs.cloudflare.com/ajax/libs/music/say-you-wont-let-go.mp3" type="audio/mp3">
+    </audio>
+    <button id="audioControl" onclick="toggleMusic()">🎵</button>
+
+    <div class="main-container">
+        <div class="valentine-card">
+            <h1 class="title">Adeola Baby 💝</h1>
+            <div class="message">Will you be my Valentine?</div>
+            <div id="pidgin-message" class="pidgin-message">
+                Baby no dey form, you know say na you I want! 😘
+            </div>
+            <div class="buttons">
+                <button class="btn btn-yes" onclick="sayYes()">YES 😍</button>
+                <button class="btn btn-no" onmouseover="moveButton(this)">NO 😢</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="celebration" id="celebration"></div>
+
+    <script>
+        // Funny Pidgin messages
+        const pidginMessages = [
+            "Baby why you dey run? Your chair dey here! 😂",
+            "Na me and you till infinity o! 💫",
+            "You wan do Shakara for me? No try am! 😏",
+            "Oya na, stop this hard to get! 🙈",
+            "Baby make we do this thing! 💝",
+            "My heart don select you finish! 💕",
+            "No dey waste time jor! 😊",
+            "You plus me equals love forever! ❤️",
+            "Baby you no get choice o! Na you I want! 😘",
+            "Why you dey form like Agege bread? 🍞"
+        ];
+
+        // Move the No button when hovered
+        function moveButton(button) {
+            const container = document.querySelector('.main-container');
+            const maxX = container.clientWidth - button.offsetWidth - 50;
+            const maxY = container.clientHeight - button.offsetHeight - 50;
+            
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            button.style.left = `${randomX}px`;
+            button.style.top = `${randomY}px`;
+            
+            // Update Pidgin message
+            const messageDiv = document.getElementById('pidgin-message');
+            messageDiv.textContent = pidginMessages[Math.floor(Math.random() * pidginMessages.length)];
+        }
+
+        // Handle Yes click
+        function sayYes() {
+            const card = document.querySelector('.valentine-card');
+            card.innerHTML = `
+                <h1 class="title">Yeeeee! 🎉</h1>
+                <div class="message">
+                    Baby you don make me the happiest person! ❤️<br>
+                    I love you die! 😘<br>
+                    Make we paint the town red! 🎨
+                </div>
+            `;
+            startCelebration();
+        }
+
+        // Celebration effects
+        function startCelebration() {
+            document.getElementById('celebration').style.display = 'block';
+            createConfetti();
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'absolute';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = -10 + 'px';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confetti.style.borderRadius = '50%';
+                confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear`;
+                document.getElementById('celebration').appendChild(confetti);
+            }
+        }
+
+        // Music controls
+        function toggleMusic() {
+            const music = document.getElementById('bgMusic');
+            if (music.paused) {
+                music.play();
+                document.getElementById('audioControl').textContent = '🔇';
+            } else {
+                music.pause();
+                document.getElementById('audioControl').textContent = '🎵';
+            }
+        }
+
+        // Initialize particles
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#ff69b4' },
+                shape: { type: 'heart' },
+                opacity: { value: 0.5, random: true },
+                size: { value: 5, random: true },
+                move: { enable: true, speed: 3, direction: 'none', random: true }
+            }
+        });
+
+        // Start music on first interaction
+        document.body.addEventListener('click', function() {
+            const music = document.getElementById('bgMusic');
+            if (music.paused) {
+                music.play();
+                document.getElementById('audioControl').textContent = '🔇';
+            }
+        }, { once: true });
+    </script>
+</body>
+</html>
